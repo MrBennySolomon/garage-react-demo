@@ -4,6 +4,8 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Services from "./pages/Services";
+import Admin from "./pages/Admin";
+
 
 export default function App() {
   return (
@@ -13,6 +15,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/services" element={<Services />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </>
   );
