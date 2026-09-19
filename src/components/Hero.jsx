@@ -7,7 +7,7 @@ export default function Hero() {
       <div className="hero-overlay" />
       <div className="container hero-content">
         <div className="hero-copy">
-          <span className="eyebrow">מרכז שירות מקצועי לרכב</span>
+          <span className="eyebrow">שירות מקצועי לרכב</span>
           <h1>הרכב שלך בידיים<br /><span>מקצועיות.</span></h1>
           <p>טיפולים, דיאגנוסטיקה, חשמל ומיזוג — עם שירות אישי, שקיפות ומקצועיות.</p>
 
