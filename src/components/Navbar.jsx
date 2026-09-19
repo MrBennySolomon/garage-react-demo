@@ -33,6 +33,9 @@ export default function Navbar() {
           <NavLink to="/admin" onClick={close}>
             ניהול
           </NavLink>
+          <NavLink to="/contact" onClick={close}>
+            קבעו תור
+          </NavLink>
         </nav>
 
         <a className="nav-phone" href="tel:0538880211">

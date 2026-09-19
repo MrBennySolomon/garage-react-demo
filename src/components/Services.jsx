@@ -26,7 +26,6 @@ export default function Services({ preview = false }) {
               <div className="service-icon">{service.icon}</div>
               <h3>{service.title}</h3>
               <p>{service.text}</p>
-              <span className="read-more">למידע נוסף ←</span>
             </article>
           ))}
         </div>

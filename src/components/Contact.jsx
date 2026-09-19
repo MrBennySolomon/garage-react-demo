@@ -75,7 +75,7 @@ export default function Contact() {
     <section id="contact" className="section contact-section">
       <div className="container contact-grid">
         <div>
-          <span className="eyebrow dark">צור קשר</span>
+          <span className="eyebrow dark">קבעו תור</span>
 
           <h2>בואו נדאג לרכב שלך</h2>
 
