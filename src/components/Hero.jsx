@@ -13,7 +13,7 @@ export default function Hero() {
 
           <div className="hero-actions">
             <a href="#contact" className="btn btn-primary">קבעו תור <ArrowLeft size={18} /></a>
-            <a href="tel:0500000000" className="btn btn-ghost"><Phone size={18} /> התקשרו עכשיו</a>
+            <a href="tel:0538880211" className="btn btn-ghost"><Phone size={18} /> התקשרו עכשיו</a>
           </div>
 
           <div className="hero-points">
