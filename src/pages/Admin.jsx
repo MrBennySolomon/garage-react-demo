@@ -1,7 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Download, Phone, RefreshCw, Search, Trash2 } from "lucide-react";
+import { Download, Lock, Phone, RefreshCw, Search, X } from "lucide-react";
 
 const API_URL = "https://6aae754a606bd915d110d395.mockapi.io/api/clients";
+
+// סיסמת הכניסה למסך הניהול – מומלץ להחליף לפני שימוש בפועל
+const ADMIN_PASSWORD = "12345";
+const SESSION_KEY = "admin-authed";
 
 // כל קטגוריה מקבלת צבע משלה – זהה בטבלה ובכרטיסים
 const CATEGORY_COLORS = {
@@ -37,12 +41,50 @@ function formatDate(value) {
 }
 
 export default function Admin() {
+  const [authed, setAuthed] = useState(() => {
+    try {
+      return sessionStorage.getItem(SESSION_KEY) === "true";
+    } catch {
+      return false;
+    }
+  });
+  const [password, setPassword] = useState("");
+  const [authError, setAuthError] = useState("");
+
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("all");
   const [deletingId, setDeletingId] = useState(null);
+
+  function handleLogin(e) {
+    e.preventDefault();
+
+    if (password === ADMIN_PASSWORD) {
+      setAuthError("");
+      setAuthed(true);
+
+      try {
+        sessionStorage.setItem(SESSION_KEY, "true");
+      } catch {
+        // sessionStorage לא זמין – ההתחברות עדיין תעבוד לטאב הנוכחי
+      }
+    } else {
+      setAuthError("סיסמה שגויה. נסו שוב.");
+    }
+  }
+
+  function logout() {
+    setAuthed(false);
+    setPassword("");
+
+    try {
+      sessionStorage.removeItem(SESSION_KEY);
+    } catch {
+      // ignore
+    }
+  }
 
   async function load() {
     setLoading(true);
@@ -67,8 +109,8 @@ export default function Admin() {
   }
 
   useEffect(() => {
-    load();
-  }, []);
+    if (authed) load();
+  }, [authed]);
 
   async function remove(id) {
     if (!window.confirm("למחוק את הפנייה? הפעולה אינה הפיכה.")) return;
@@ -146,6 +188,37 @@ export default function Admin() {
     URL.revokeObjectURL(url);
   }
 
+  if (!authed) {
+    return (
+      <div className="admin login-screen" dir="rtl">
+        <style>{css}</style>
+
+        <form className="login-card" onSubmit={handleLogin}>
+          <div className="login-icon">
+            <Lock size={20} />
+          </div>
+
+          <h1>כניסה לניהול</h1>
+          <p>הזינו סיסמה כדי לצפות בפניות</p>
+
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="סיסמה"
+            autoFocus
+          />
+
+          {authError && <div className="login-error">{authError}</div>}
+
+          <button className="btn-primary" type="submit">
+            כניסה
+          </button>
+        </form>
+      </div>
+    );
+  }
+
   return (
     <div className="admin" dir="rtl">
       <style>{css}</style>
@@ -171,6 +244,10 @@ export default function Admin() {
           >
             <Download size={16} />
             ייצוא CSV
+          </button>
+
+          <button className="ghost" onClick={logout}>
+            יציאה
           </button>
         </div>
       </header>
@@ -260,7 +337,7 @@ export default function Admin() {
                         disabled={deletingId === row.id}
                         aria-label="מחיקת פנייה"
                       >
-                        <Trash2 size={16} />
+                        <X size={16} />
                       </button>
                     </td>
                   </tr>
@@ -297,7 +374,7 @@ export default function Admin() {
                     disabled={deletingId === row.id}
                     aria-label="מחיקת פנייה"
                   >
-                    <Trash2 size={16} />
+                    <X size={16} />
                   </button>
                 </div>
               </article>
@@ -402,8 +479,9 @@ const css = `
 .tel:hover { text-decoration: underline; }
 
 .icon {
-  display: inline-grid; place-items: center; width: 34px; height: 34px;
+  display: inline-grid; place-items: center; width: 30px; height: 30px;
   background: transparent; border: 1px solid var(--line); color: var(--muted);
+  border-radius: 50%;
 }
 .icon.danger:hover:not(:disabled) { color: #c0202e; border-color: #f0c2c6; background: #fdf2f3; }
 
@@ -420,6 +498,33 @@ const css = `
 .spin { animation: admin-spin 1s linear infinite; }
 @keyframes admin-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .spin { animation: none; } }
+
+.login-screen { display: grid; place-items: center; padding: 20px; }
+.login-card {
+  width: 100%; max-width: 340px; background: var(--panel);
+  border: 1px solid var(--line); border-radius: 16px;
+  padding: 28px 24px; text-align: center;
+  box-shadow: 0 10px 30px rgba(20,30,45,.06);
+}
+.login-icon {
+  width: 44px; height: 44px; border-radius: 50%; margin: 0 auto 14px;
+  display: grid; place-items: center; background: #eef1f5; color: #334155;
+}
+.login-card h1 { font-size: 1.25rem; margin-bottom: 4px; }
+.login-card p { margin-bottom: 18px; }
+.login-card input {
+  width: 100%; font: inherit; padding: 11px 13px; border-radius: 10px;
+  border: 1px solid var(--line); text-align: center; margin-bottom: 12px;
+  background: #fbfcfd; color: var(--ink);
+}
+.login-card input:focus-visible { outline: 2px solid #2f6fd0; outline-offset: 1px; }
+.login-error { color: #b3202c; font-size: .85rem; margin-bottom: 12px; }
+.btn-primary {
+  width: 100%; font: inherit; font-weight: 600; cursor: pointer;
+  padding: 11px 14px; border-radius: 10px; border: none;
+  background: #16202c; color: #fff;
+}
+.btn-primary:hover { background: #223042; }
 
 /* טאבלט */
 @media (max-width: 1024px) {
