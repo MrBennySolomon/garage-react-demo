@@ -7,7 +7,6 @@ import Services from "./pages/Services";
 import Admin from "./pages/Admin";
 import ContactPage from "./pages/ContactPage";
 
-
 export default function App() {
   return (
     <>
