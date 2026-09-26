@@ -199,7 +199,6 @@ export default function Admin() {
           </div>
 
           <h1>כניסה לניהול</h1>
-          <p>הזינו סיסמה כדי לצפות בבקשות ההובלה</p>
 
           <input
             type="password"
@@ -211,7 +210,7 @@ export default function Admin() {
 
           {authError && <div className="login-error">{authError}</div>}
 
-          <button className="btn-primary" type="submit">
+          <button className="btn-primary1" type="submit">
             כניסה
           </button>
         </form>
