@@ -2,7 +2,17 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Download, Lock, Phone, RefreshCw, Search, X } from "lucide-react";
 import "../data/Login.css";
 
-const API_URL = "https://6aae754a606bd915d110d395.mockapi.io/api/clients";
+const API_URL = await fetch(
+  "business-server-git-main-mrbennysolomons-projects.vercel.app/garage"
+)
+  .then((response) => response.json())
+  .then((data) => {
+    return data;
+  })
+  .catch((error) => {
+    console.error("Error fetching API URL:", error);
+    return "http://localhost:3000/garage";
+  });
 
 // סיסמת הכניסה למסך הניהול – מומלץ להחליף לפני שימוש בפועל
 const ADMIN_PASSWORD = "12345";
