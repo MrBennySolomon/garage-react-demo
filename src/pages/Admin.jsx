@@ -10,12 +10,13 @@ const SESSION_KEY = "admin-authed";
 
 // כל קטגוריה מקבלת צבע משלה – זהה בטבלה ובכרטיסים
 const CATEGORY_COLORS = {
-  "הובלה חד-פעמית": "#1d9a6c",
-  "קו הובלה קבוע": "#2f6fd0",
-  "הובלה לאתר בנייה": "#d97706",
-  "שינוע למפעל / מחסן": "#0f9bb0",
-  "מטען כבד או גדול": "#7a5af5",
-  "הובלה דחופה": "#d33a45"
+  "טיפול תקופתי": "#1d9a6c",
+  דיאגנוסטיקה: "#2f6fd0",
+  מיזוג: "#0f9bb0",
+  "חשמל רכב": "#b8860b",
+  מכונאות: "#7a5af5",
+  "הכנה לטסט": "#d2691e",
+  "תיקון רכב שנכשל בטסט": "#d33a45"
 };
 
 const CATEGORIES = Object.keys(CATEGORY_COLORS);
@@ -102,7 +103,7 @@ export default function Admin() {
       setRows(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error(err);
-      setError("לא הצלחנו לטעון את בקשות ההובלה. בדקו את החיבור ונסו שוב.");
+      setError("לא הצלחנו לטעון את הפניות. בדקו את החיבור ונסו שוב.");
     } finally {
       setLoading(false);
     }
@@ -156,7 +157,7 @@ export default function Admin() {
   }, [rows]);
 
   function exportCsv() {
-    const header = ["שם / עסק", "טלפון", "סוג הובלה", "פרטים", "תאריך"];
+    const header = ["שם", "טלפון", "קטגוריה", "פרטים", "תאריך"];
 
     const lines = visible.map((row) =>
       [
