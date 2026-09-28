@@ -11,7 +11,7 @@ const API_URL = await fetch(
   })
   .catch((error) => {
     console.error("Error fetching API URL:", error);
-    return "http://localhost:3000/garage";
+    return "error";
   });
 
 // סיסמת הכניסה למסך הניהול – מומלץ להחליף לפני שימוש בפועל
