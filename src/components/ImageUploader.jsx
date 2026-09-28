@@ -3,8 +3,19 @@ import { Lock } from "lucide-react";
 import "../data/Login.css";
 
 // כתובת בסיס ה-Realtime Database (בלי סלאש בסוף)
-const DB_URL =
-  "https://users-be4a5-default-rtdb.europe-west1.firebasedatabase.app";
+// const DB_URL =
+//   "https://users-be4a5-default-rtdb.europe-west1.firebasedatabase.app";
+const DB_URL = await fetch(
+  "business-server-git-main-mrbennysolomons-projects.vercel.app/images/garage"
+)
+  .then((response) => response.json())
+  .then((data) => {
+    return data;
+  })
+  .catch((error) => {
+    console.error("Error fetching API URL:", error);
+    return "error";
+  });
 
 // סיסמת הכניסה למסך העלאת התמונות – מומלץ להחליף לפני שימוש בפועל
 const UPLOADER_PASSWORD = "12345";
