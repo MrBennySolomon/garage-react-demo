@@ -2,12 +2,9 @@ import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { Menu, X, Phone, Wrench } from "lucide-react";
 import siteConfig from "../data/siteConfig";
-import { useAuth } from "../auth/AuthContext";
-import "../auth/Auth.css";
 
 export default function Navbar() {
   const { brand, nav } = siteConfig;
-  const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
 
@@ -30,21 +27,6 @@ export default function Navbar() {
               {item.label}
             </NavLink>
           ))}
-          {user ? (
-            <button
-              className="nav-logout"
-              onClick={() => {
-                logout();
-                close();
-              }}
-            >
-              התנתקות ({user.name})
-            </button>
-          ) : (
-            <NavLink to="/login" onClick={close}>
-              התחברות
-            </NavLink>
-          )}
         </nav>
 
         <a className="nav-phone" href={`tel:${brand.phoneHref}`}>

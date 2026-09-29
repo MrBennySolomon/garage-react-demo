@@ -1,7 +1,12 @@
 import React, { useMemo, useState } from "react";
+import { Lock } from "lucide-react";
+import "./Login.css";
 import "./SiteConfigEditor.css";
 import siteConfig from "./siteConfig";
-import { useAuth } from "../auth/AuthContext";
+
+// סיסמת הכניסה לעריכת תוכן האתר – מומלץ להחליף לפני שימוש בפועל
+const EDITOR_PASSWORD = "12345";
+const SESSION_KEY = "site-config-editor-authed";
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
 
@@ -23,11 +28,47 @@ const emptyCard = () => ({
 });
 
 export default function SiteConfigEditor() {
-  const { logout } = useAuth();
+  const [authed, setAuthed] = useState(() => {
+    try {
+      return sessionStorage.getItem(SESSION_KEY) === "true";
+    } catch {
+      return false;
+    }
+  });
+  const [password, setPassword] = useState("");
+  const [authError, setAuthError] = useState("");
 
   const [config, setConfig] = useState(() => clone(siteConfig));
   const [tab, setTab] = useState("brand");
   const [message, setMessage] = useState("");
+
+  function handleLogin(e) {
+    e.preventDefault();
+
+    if (password === EDITOR_PASSWORD) {
+      setAuthError("");
+      setAuthed(true);
+
+      try {
+        sessionStorage.setItem(SESSION_KEY, "true");
+      } catch {
+        // sessionStorage לא זמין – ההתחברות עדיין תעבוד לטאב הנוכחי
+      }
+    } else {
+      setAuthError("סיסמה שגויה. נסו שוב.");
+    }
+  }
+
+  function logout() {
+    setAuthed(false);
+    setPassword("");
+
+    try {
+      sessionStorage.removeItem(SESSION_KEY);
+    } catch {
+      // ignore
+    }
+  }
 
   const update = (path, value) => {
     setConfig((current) => {
@@ -128,6 +169,35 @@ export default function SiteConfigEditor() {
     ["about", "אודות"],
     ["export", "ייצוא"]
   ];
+
+  if (!authed) {
+    return (
+      <div className="login-screen" dir="rtl">
+        <form className="login-card" onSubmit={handleLogin}>
+          <div className="login-icon">
+            <Lock size={20} />
+          </div>
+
+          <h1>כניסה לניהול התוכן</h1>
+          <p>הזינו סיסמה כדי לערוך את תוכן האתר</p>
+
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="סיסמה"
+            autoFocus
+          />
+
+          {authError && <div className="login-error">{authError}</div>}
+
+          <button className="btn-primary1" type="submit">
+            כניסה
+          </button>
+        </form>
+      </div>
+    );
+  }
 
   return (
     <div className="config-page" dir="rtl">
