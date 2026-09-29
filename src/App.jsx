@@ -7,7 +7,9 @@ import Services from "./pages/Services";
 import Admin from "./pages/Admin";
 import ContactPage from "./pages/ContactPage";
 import SiteConfigEditor from "./data/SiteConfigEditor";
-import ImageUploader from "./components/ImageUploader";
+import Login from "./auth/Login";
+import Register from "./auth/Register";
+import ProtectedRoute from "./auth/ProtectedRoute";
 
 export default function App() {
   return (
@@ -19,8 +21,9 @@ export default function App() {
         <Route path="/services" element={<Services />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/edit" element={<SiteConfigEditor />} />
-        <Route path="/upload" element={<ImageUploader />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </>
   );

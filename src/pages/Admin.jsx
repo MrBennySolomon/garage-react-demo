@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Download, Lock, Phone, RefreshCw, Search, X } from "lucide-react";
+import { useAuth } from "../auth/AuthContext";
 import "../data/Login.css";
 
 const API_URL = await fetch(
@@ -10,7 +11,6 @@ const API_URL = await fetch(
     return data;
   })
   .catch((error) => {
-    console.error("Error fetching API URL:", error);
     return "error";
   });
 
@@ -52,15 +52,17 @@ function formatDate(value) {
 }
 
 export default function Admin() {
-  const [authed, setAuthed] = useState(() => {
-    try {
-      return sessionStorage.getItem(SESSION_KEY) === "true";
-    } catch {
-      return false;
-    }
-  });
-  const [password, setPassword] = useState("");
-  const [authError, setAuthError] = useState("");
+    const { logout } = useAuth();
+
+  // const [authed, setAuthed] = useState(() => {
+  //   try {
+  //     return sessionStorage.getItem(SESSION_KEY) === "true";
+  //   } catch {
+  //     return false;
+  //   }
+  // });
+  // const [password, setPassword] = useState("");
+  // const [authError, setAuthError] = useState("");
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -86,16 +88,16 @@ export default function Admin() {
     }
   }
 
-  function logout() {
-    setAuthed(false);
-    setPassword("");
+  // function logout() {
+  //   setAuthed(false);
+  //   setPassword("");
 
-    try {
-      sessionStorage.removeItem(SESSION_KEY);
-    } catch {
-      // ignore
-    }
-  }
+  //   try {
+  //     sessionStorage.removeItem(SESSION_KEY);
+  //   } catch {
+  //     // ignore
+  //   }
+  // }
 
   async function load() {
     setLoading(true);
@@ -112,7 +114,7 @@ export default function Admin() {
 
       setRows(Array.isArray(data) ? data : []);
     } catch (err) {
-      console.error(err);
+      // console.error(err);
       setError("לא הצלחנו לטעון את הפניות. בדקו את החיבור ונסו שוב.");
     } finally {
       setLoading(false);
@@ -120,8 +122,8 @@ export default function Admin() {
   }
 
   useEffect(() => {
-    if (authed) load();
-  }, [authed]);
+    load();
+  }, []);
 
   async function remove(id) {
     if (!window.confirm("למחוק את הבקשה? הפעולה אינה הפיכה.")) return;
@@ -199,35 +201,35 @@ export default function Admin() {
     URL.revokeObjectURL(url);
   }
 
-  if (!authed) {
-    return (
-      <div className="admin login-screen" dir="rtl">
-        <style>{css}</style>
+  // if (!authed) {
+  //   return (
+  //     <div className="admin login-screen" dir="rtl">
+  //       <style>{css}</style>
 
-        <form className="login-card" onSubmit={handleLogin}>
-          <div className="login-icon">
-            <Lock size={20} />
-          </div>
+  //       <form className="login-card" onSubmit={handleLogin}>
+  //         <div className="login-icon">
+  //           <Lock size={20} />
+  //         </div>
 
-          <h1>כניסה לניהול</h1>
+  //         <h1>כניסה לניהול</h1>
 
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="סיסמה"
-            autoFocus
-          />
+  //         <input
+  //           type="password"
+  //           value={password}
+  //           onChange={(e) => setPassword(e.target.value)}
+  //           placeholder="סיסמה"
+  //           autoFocus
+  //         />
 
-          {authError && <div className="login-error">{authError}</div>}
+  //         {authError && <div className="login-error">{authError}</div>}
 
-          <button className="btn-primary1" type="submit">
-            כניסה
-          </button>
-        </form>
-      </div>
-    );
-  }
+  //         <button className="btn-primary1" type="submit">
+  //           כניסה
+  //         </button>
+  //       </form>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="admin" dir="rtl">
